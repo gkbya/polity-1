@@ -1,20 +1,31 @@
-document.querySelectorAll('.question').forEach(question => {
-  const correctOption = question.dataset.correct;
+document.addEventListener("DOMContentLoaded", () => {
+  const questions = document.querySelectorAll(".question");
 
-  question.querySelectorAll('li').forEach(option => {
-    option.addEventListener('click', () => {
-      question.querySelectorAll('li').forEach(li => {
-        const isCorrect = li.dataset.option === correctOption;
+  questions.forEach((question) => {
+    const correctOption = question.dataset.correct || question.dataset.answer;
+    const options = question.querySelectorAll("li");
 
-        if (isCorrect) {
-          li.style.backgroundColor = 'green';
-          li.style.color = 'white';
-        } else if (li === option) {
-          li.style.backgroundColor = 'red';
-          li.style.color = 'white';
+    options.forEach((option) => {
+      option.addEventListener("click", () => {
+        // Prevent multiple attempts
+        if (question.classList.contains("answered")) return;
+        question.classList.add("answered");
+
+        const selected = option.dataset.option;
+
+        // Mark selected option
+        if (selected === correctOption) {
+          option.style.backgroundColor = "lightgreen";
+        } else {
+          option.style.backgroundColor = "lightcoral";
+
+          // Also highlight the correct option
+          options.forEach((opt) => {
+            if (opt.dataset.option === correctOption) {
+              opt.style.backgroundColor = "lightgreen";
+            }
+          });
         }
-
-        li.style.pointerEvents = 'none';
       });
     });
   });
